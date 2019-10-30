@@ -42,7 +42,7 @@ public class SheepShearerSpinWool extends Task {
             System.out.println("Using wheel");
             wool.interact("Use");
             spinningWheel.interact("Use", "Spinning wheel");
-            Condition.wait(() -> spin.visible(), 50, 20);
+            Condition.wait(() -> spin.visible(), 50, 40);
         } else if (WHEEL_LOCATION[0].matrix(ctx).reachable() && !spinningWheel.inViewport()) {
             System.out.println("Turning to wheel");
             ctx.camera.turnTo(spinningWheel);
@@ -58,7 +58,7 @@ public class SheepShearerSpinWool extends Task {
 
             if (temp != ctx.inventory.select().id(WOOL_ID).count()) {
                 Condition.wait(() -> ctx.inventory.select().id(WOOL_ID).isEmpty() ||
-                        ctx.chat.canContinue(), 1000, 50);
+                        ctx.chat.canContinue(), 1000, 30);
             }
         }
 
