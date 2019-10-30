@@ -24,7 +24,7 @@ public class ShearerShearWool extends Task {
 
     @Override
     public boolean activate() {
-        return ctx.varpbits.varpbit(SHEARER_QUEST_VARPBIT) != 21 && ctx.players.local().animation() == -1 && ctx.inventory.select().count() < 28 && ctx.inventory.select().id(WOOL_ID).count() < 20 && ctx.inventory.select().id(SHEARS_ID).count() == 1 && SHEEP_PEN.distanceTo(ctx.players.local()) < 15;
+        return ctx.varpbits.varpbit(SHEARER_QUEST_VARPBIT) != 21 && !ctx.players.local().inMotion() && ctx.players.local().animation() == -1 && ctx.inventory.select().count() < 28 && ctx.inventory.select().id(WOOL_ID).count() < 20 && ctx.inventory.select().id(SHEARS_ID).count() == 1 && SHEEP_PEN.distanceTo(ctx.players.local()) < 15;
     }
 
     @Override
@@ -33,12 +33,10 @@ public class ShearerShearWool extends Task {
         Npc sheep = ctx.npcs.select().id(SHEEP_IDS).nearest().poll();
 
         if (sheep.inViewport() && sheep.tile().matrix(ctx).reachable() && ctx.inventory.select().id(WOOL_ID).count() < 20) {
+            Condition.sleep(Random.nextInt(250, 1000));
             System.out.println("Shearing sheep.");
             sheep.interact("Shear");
-            Condition.sleep(1000 + Random.nextInt(0, 500));
-            Condition.wait(() -> ctx.players.local().animation() == -1, 100, 5);
-            Condition.sleep(1000 + Random.nextInt(0, 1000));
-
+            Condition.wait(() -> ctx.players.local().animation() == 893, 50, 20);
         } else if (!sheep.inViewport() && sheep.tile().matrix(ctx).reachable() && ctx.inventory.select().id(WOOL_ID).count() < 20) {
             System.out.println("Turning to Sheep");
             ctx.camera.turnTo(sheep);
@@ -46,19 +44,6 @@ public class ShearerShearWool extends Task {
             System.out.println("Walking to Sheep");
             Tile sheepTile[] = {sheep.tile()};
             this.walker.walkPath(sheepTile);
-        }
-
-
-        if (sheep.inViewport()) {
-            if (ctx.inventory.select().id(WOOL_ID).count() < 20) {
-                sheep.interact("Shear");
-                System.out.println("Shearing sheep.");
-                Condition.sleep(1000 + Random.nextInt(0, 500));
-                Condition.wait(() -> ctx.players.local().animation() == -1, 100, 5);
-                Condition.sleep(1000 + Random.nextInt(0, 1000));
-            }
-        } else {
-            ctx.camera.turnTo(sheep);
         }
 
     }

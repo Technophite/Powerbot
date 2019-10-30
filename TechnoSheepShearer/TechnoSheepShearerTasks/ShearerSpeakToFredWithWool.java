@@ -7,6 +7,7 @@ import org.powerbot.script.Random;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.ClientContext;
 import org.powerbot.script.rt4.Component;
+import org.powerbot.script.rt4.Components;
 import org.powerbot.script.rt4.Npc;
 
 public class ShearerSpeakToFredWithWool extends Task {
@@ -16,9 +17,7 @@ public class ShearerSpeakToFredWithWool extends Task {
     private final int FRED_FARMER_ID = 732;
     private static final Tile farmhouse = new Tile(3190, 3272, 0);
 
-
     private final Walker walker;
-
 
     public ShearerSpeakToFredWithWool(ClientContext ctx, Walker walker) {
         super(ctx);
@@ -35,15 +34,7 @@ public class ShearerSpeakToFredWithWool extends Task {
 
         System.out.println("Looking for Fred");
 
-        Component chatContinue = ctx.widgets.widget(231).component(3);
-        Component chatContinue2 = ctx.widgets.widget(217).component(3);
-        Component chatContinue3 = ctx.widgets.widget(229).component(2);
-
-        Component chatOptions0 = ctx.widgets.widget(219).component(1).component(1);
-
-
         Npc farmerFred = ctx.npcs.select().id(FRED_FARMER_ID).nearest().poll();
-
 
         if (farmerFred.inViewport() && farmerFred.tile().matrix(ctx).reachable() && !ctx.chat.chatting()) {
             System.out.println("Talking to Fred");
@@ -61,28 +52,19 @@ public class ShearerSpeakToFredWithWool extends Task {
 
         if (ctx.chat.chatting()) {
             System.out.println("Chatting already");
-            if (chatContinue.text().equals("Click here to continue")) {
-                System.out.println("Sending space");
-                ctx.input.send("{VK_SPACE}");
-                Condition.sleep(Random.nextInt(500, 1500));
-            } else if (chatContinue2.text().equals("Click here to continue")) {
-                System.out.println("Sending space");
-                ctx.input.send("{VK_SPACE}");
-                Condition.sleep(Random.nextInt(500, 1500));
-            } else if (chatContinue3.text().equals("Click here to continue")) {
-                System.out.println("Sending space");
-                ctx.input.send("{VK_SPACE}");
-                Condition.sleep(Random.nextInt(500, 1500));
-            } else if (chatOptions0.text().equals("I'm looking for a quest.")) {
-                System.out.println("Sending option 1");
-                ctx.input.send("1");
-                Condition.sleep(Random.nextInt(500, 1500));
-            } else if (chatOptions0.text().equals("Yes okay. I can do that.")) {
-                System.out.println("Sending option 1");
-                ctx.input.send("1");
-                Condition.sleep(Random.nextInt(500, 1500));
-            }
 
+            Component chatContinue = ctx.components.select().text("Click here to continue").poll();
+            Component chatOptions = ctx.components.select().text("I'm looking for a quest.", "Yes okay. I can do that.").poll();
+
+            if (chatContinue.visible()) {
+                System.out.println("Sending space");
+                ctx.input.send("{VK_SPACE}");
+                Condition.wait(() -> chatOptions.visible(), 50, 20);
+            } else if (chatOptions.visible()) {
+                System.out.println("Sending option 1");
+                ctx.input.send("1");
+                Condition.wait(() -> chatContinue.visible(), 50, 20);
+            }
         }
     }
 }

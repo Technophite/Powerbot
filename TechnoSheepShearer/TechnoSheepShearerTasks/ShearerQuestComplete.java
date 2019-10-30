@@ -18,6 +18,7 @@ public class ShearerQuestComplete extends Task {
 
     @Override
     public void execute() {
+        System.out.println("Quest is already complete.");
         ctx.controller.stop();
     }
 }

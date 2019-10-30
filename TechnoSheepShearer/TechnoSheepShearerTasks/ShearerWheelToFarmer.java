@@ -30,16 +30,7 @@ public class ShearerWheelToFarmer extends Task {
     public void execute() {
         System.out.println("Should be looking to get to Farmer");
         if (!ctx.players.local().inMotion() || ctx.movement.destination().equals(Tile.NIL) || ctx.movement.destination().distanceTo(ctx.players.local()) < 6) {
-            if (!ctx.movement.running()) {
-                ctx.movement.running(true);
-                Condition.wait(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return ctx.movement.running();
-                    }
-                }, 25 + Random.nextInt(0, 25), 5);
 
-            }
             this.walker.walkPath(pathToFarmer);
 
             Condition.sleep(Random.nextInt(500, 1000));

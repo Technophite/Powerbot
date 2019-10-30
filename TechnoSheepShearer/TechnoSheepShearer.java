@@ -14,7 +14,6 @@ import java.util.List;
         properties = "author=Technophite; topic=999; client=4;"
 )
 
-
 public class TechnoSheepShearer extends PollingScript<ClientContext> {
     public List<Task> taskList = new ArrayList<Task>();
 
@@ -22,13 +21,14 @@ public class TechnoSheepShearer extends PollingScript<ClientContext> {
     public void start() {
         Walker walker = new Walker(ctx);
         System.out.println("Adding Sheep Shearer task list.");
-            taskList.add(new ShearerQuestComplete(ctx));
-            taskList.add(new ShearerSpeakToFredWithWool(ctx, walker));
-            taskList.add(new ShearerWheelToFarmer(ctx, walker));
-            taskList.add(new ShearerSpinWool(ctx, walker));
-            taskList.add(new ShearerSheepPenToWheel(ctx, walker));
-            taskList.add(new ShearerShearWool(ctx, walker));
-        }
+        taskList.add(new RunSwitcher(ctx));
+        taskList.add(new ShearerQuestComplete(ctx));
+        taskList.add(new ShearerSpeakToFredWithWool(ctx, walker));
+        taskList.add(new ShearerWheelToFarmer(ctx, walker));
+        taskList.add(new ShearerSpinWool(ctx, walker));
+        taskList.add(new ShearerSheepPenToWheel(ctx, walker));
+        taskList.add(new ShearerShearWool(ctx, walker));
+    }
 
     @Override
     public void poll() {

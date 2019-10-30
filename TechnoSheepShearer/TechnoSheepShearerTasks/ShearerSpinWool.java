@@ -36,11 +36,13 @@ public class ShearerSpinWool extends Task {
         Item wool = ctx.inventory.select().id(WOOL_ID).poll();
         final int temp = ctx.inventory.select().id(WOOL_ID).count();
 
+        Component spin = ctx.widgets.widget(270).component(14);
+
         if (WHEEL_LOCATION[0].matrix(ctx).reachable() && spinningWheel.inViewport()) {
             System.out.println("Using wheel");
             wool.interact("Use");
             spinningWheel.interact("Use", "Spinning wheel");
-            Condition.sleep(Random.nextInt(1250, 2000));
+            Condition.wait(() -> spin.visible(), 50, 20);
         } else if (WHEEL_LOCATION[0].matrix(ctx).reachable() && !spinningWheel.inViewport()) {
             System.out.println("Turning to wheel");
             ctx.camera.turnTo(spinningWheel);
@@ -48,9 +50,9 @@ public class ShearerSpinWool extends Task {
             System.out.println("Walking to wheel");
             this.walker.walkPath(WHEEL_LOCATION);
         }
-        Component spin = ctx.widgets.widget(270).component(14);
 
         if (spin.visible()) {
+            Condition.sleep(Random.nextInt(500, 1500));
             spin.interact("Make");
             Condition.wait(() -> temp != ctx.inventory.select().id(WOOL_ID).count(), 250, 8);
 
